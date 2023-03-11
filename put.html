@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>JS For Beginners</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <h1>JS For Beginners</h1>
+    </header>
+
+
+    <form onsubmit="saveToLocalStorage(event)">
+        <label>name</label>
+        <input type="text" name="username" required />
+        <label>email</label>
+        <input type="email" name="emailid" required />
+        <button>submit</button>
+    </form>
+
+    <ul id="users"></ul>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.4/axios.min.js"></script>
+    <script>
+        function saveToLocalStorage(event) {
+            // to prevent from unecessary reloading
+            event.preventDefault();
+            var name = event.target.username.value;
+            var email = event.target.emailid.value;
+            // localStorage.setItem('username', name);
+            // localStorage.setItem('emailid', email);
+
+
+            var myobj = {
+                name,
+                email,
+            }
+            localStorage.setItem(myobj.email, JSON.stringify(myobj))
+            axios.post("https://crudcrud.com/api/a4fa7e28532146e4b58b565dd0811a8b/appointmentData,myobj")
+            // whenever you do a networkcall.axios makes a promise to you.either am going to be sucessful store the data over there or am going to fail.
+            .then((response)=>{
+                showUserOnScreen(response.data)
+                console.log(response)
+            })
+            // it can also break the promise so we will do .catch
+            .catch((err)=>{
+                console.log(err)
+            })
+            // showUserOnScreen(myobj)
+
+            axios.get("https://crudcrud.com/api/a4fa7e28532146e4b58b565dd0811a8b/appointmentData")
+         .then((response)=>{
+            console.log(response)
+
+            for(var i=0;i<response.data.length;i++)
+            {
+                showUserOnScreen(response.data[i])
+            }
+         })
+         .catch((error)=>{
+            console.log(error)
+         })
+        }
+
+        axios.delete("https://crudcrud.com/api/a4fa7e28532146e4b58b565dd0811a8b/appointmentData")
+            // whenever you do a networkcall.axios makes a promise to you.either am going to be sucessful store the data over there or am going to fail.
+            .then((response)=>{
+                showUserOnScreen(response.data)
+                console.log(response)
+            })
+            // it can also break the promise so we will do .catch
+            .catch((err)=>{
+                console.log(err)
+            })
+            // showUserOnScreen(myobj)
+
+
+
+            axios.put("https://crudcrud.com/api/a4fa7e28532146e4b58b565dd0811a8b/appointmentData")
+            // whenever you do a networkcall.axios makes a promise to you.either am going to be sucessful store the data over there or am going to fail.
+            .then((response)=>{
+                showUserOnScreen(response.data)
+                console.log(response)
+            })
+            // it can also break the promise so we will do .catch
+            .catch((err)=>{
+                console.log(err)
+            })
+            // showUserOnScreen(myobj)
+
+
+        function showUserOnScreen(myobj) {
+        //  axios.get("https://crudcrud.com/api/a9465d8403d64325b9c7bcc30cd88158/editanddelete")
+        //  .then((response)=>{
+        //     console.log(response)
+        //  })
+        //  .catch((error)=>{
+        //     console.log(error)
+        //  })
+
+            var parentElement = document.getElementById("users");
+            var childElement = document.createElement('li')
+            childElement.textContent = myobj.name + '-' + myobj.email + '-' + myobj.age
+            parentElement.appendChild(childElement)
+
+
+            var deletebutton = document.createElement('input')
+            deletebutton.type = "button"
+            deletebutton.value = 'delete user'
+            deletebutton.onclick = () => {
+                localStorage.removeItem(myobj.email)
+                parentElement.removeChild(childElement)
+            }
+            childElement.appendChild(deletebutton)
+            parentElement.appendChild(childElement)
+
+
+
+
+            var editbutton = document.createElement('input')
+            editbutton.type = "button"
+            editbutton.value = 'edit user'
+            editbutton.onclick = () => {
+                localStorage.removeItem(myobj.email)
+                parentElement.removeChild(childElement)
+                
+            }
+
+            childElement.appendChild(editbutton)
+            parentElement.appendChild(childElement)
+        }
+    </script>
+</body>
+
+</html>
